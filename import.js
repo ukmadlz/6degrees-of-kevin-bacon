@@ -67,7 +67,7 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
         for (var i = 0; i < actorList.length; i++) {
           var vertex = {
             id: 'a' + (i + 1),
-            label: 'vertex',
+            label: 'person',
             properties: {
               name: [{
                 id: uuid.v4(),
@@ -78,12 +78,8 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
                 value: 'Actor'
               }]
             },
-            inE: {
-              actor: []
-            },
-            outE: {
-              actor: []
-            }
+            inE: {},
+            outE: {}
           }
           actorVertices[i] = vertex;
         }
@@ -92,7 +88,7 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
         for (var i = 0; i < filmList.length; i++) {
           var vertex = {
             id: 'f' + (i + 1),
-            label: 'vertex',
+            label: 'film',
             properties: {
               name: [{
                 id: uuid.v4(),
@@ -103,12 +99,8 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
                 value: 'Film'
               }]
             },
-            inE: {
-              actor: []
-            },
-            outE: {
-              actor: []
-            }
+            inE: {},
+            outE: {}
           }
           filmVertices[i] = vertex;
         }
@@ -117,30 +109,31 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
         for (var i = 0; i < importData.length; i++) {
           var actorId = actorList.indexOf(importData[i][0]);
           var filmId = filmList.indexOf(importData[i][2]);
+          var relationship = importData[i][1];
           // Actor -> Film
           var edgeId = uuid.v4();
           var outE = {
             id: edgeId,
             inV: 'f' + (filmId + 1)
           }
-          actorVertices[actorId].outE.actor.push(outE);
+          actorVertices[actorId].outE[relationship].push(outE);
           var inE = {
             id: edgeId,
             inV: 'a' + (actorId + 1)
           }
-          filmVertices[filmId].inE.actor.push(inE);
+          filmVertices[filmId].inE[relationship].push(inE);
           // Film -> Actor
           var edgeId = uuid.v4();
           var outE = {
             id: edgeId,
             inV: 'a' + (actorId + 1)
           }
-          filmVertices[filmId].outE.actor.push(outE);
+          filmVertices[filmId].outE[relationship].push(outE);
           var inE = {
             id: edgeId,
             inV: 'f' + (filmId + 1)
           }
-          actorVertices[actorId].inE.actor.push(inE);
+          actorVertices[actorId].inE[relationship].push(inE);
 
         }
         for (var i = 0; i < actorVertices.length; i++) {

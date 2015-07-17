@@ -116,10 +116,16 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
             id: edgeId,
             inV: 'f' + (filmId + 1)
           }
+          if(typeof actorVertices[actorId].outE[relationship] == 'undefined') {
+            actorVertices[actorId].outE[relationship] = [];
+          }
           actorVertices[actorId].outE[relationship].push(outE);
           var inE = {
             id: edgeId,
             inV: 'a' + (actorId + 1)
+          }
+          if(typeof filmVertices[filmId].inE[relationship] == 'undefined') {
+            filmVertices[filmId].inE[relationship] = [];
           }
           filmVertices[filmId].inE[relationship].push(inE);
           // Film -> Actor
@@ -128,10 +134,16 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
             id: edgeId,
             inV: 'a' + (actorId + 1)
           }
+          if(typeof filmVertices[filmId].outE[relationship] == 'undefined') {
+            filmVertices[filmId].outE[relationship] = [];
+          }
           filmVertices[filmId].outE[relationship].push(outE);
           var inE = {
             id: edgeId,
             inV: 'f' + (filmId + 1)
+          }
+          if(typeof actorVertices[actorId].inE[relationship] == 'undefined') {
+            actorVertices[actorId].inE[relationship] = [];
           }
           actorVertices[actorId].inE[relationship].push(inE);
 

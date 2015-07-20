@@ -23,6 +23,7 @@
     "fast-csv": "^0.6.0",
     "gds-wrapper": "git://github.com/ukmadlz/gds-wrapper.git",
     "hapi": "^8.8.0",
+    "jade": "^1.11.0",
     "uuid": "^2.0.1"
   }
 }

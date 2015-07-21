@@ -91,10 +91,11 @@ var gremlinQuery = function(request, reply) {
   var actor = (request.params.actor)?request.params.actor:'Bill Paxton';
   var traversal = [
     'V()',
+    "hasLabel('person')",
     "has('type','Actor')",
     "has('name','Kevin Bacon')",
     'repeat(__.outE().inV().simplePath())',
-    "until(__.has('name','"+actor+"'))",
+    "until(__.hasLabel('person').has('name','"+actor+"'))",
     "limit(12)",
     'path()'
   ]

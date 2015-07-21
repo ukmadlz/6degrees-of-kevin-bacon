@@ -8,7 +8,7 @@ $(document).ready(function() {
 
   // passing in `null` for the `options` arguments will result in the default
   // options being used
-  $('#actors .typeahead').typeahead(null, {
+  $('#actor').typeahead(null, {
     name: 'actors',
     source: actors
   });
@@ -19,7 +19,13 @@ $(document).ready(function() {
 
     var actorName = $('#actor').val();
 
-    $.get('/bacon/' + actorName, function(data) {
+    var url = '/bacon/' + actorName;
+
+    if ($('#direct').is(':checked')) {
+      url = url + '/direct';
+    }
+
+    $.get(url, function(data) {
       console.log(data);
       $('#query').html(data.query);
       $('#graph-data').html(JSON.stringify(data.data, null, 4));

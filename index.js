@@ -22,7 +22,11 @@ var movies = gds({
 });
 
 var server = new Hapi.Server({ debug: { request: ['error'] } });
-server.connection({ port: 3000 });
+process.env.VCAP_APP_HOST || 'localhost', process.env.VCAP_APP_PORT || 3000
+server.connection({
+  host: process.env.VCAP_APP_HOST || 'localhost',
+  port: process.env.VCAP_APP_PORT || 3000
+});
 
 server.start(function() {
   console.log('Server running at:', server.info.uri);
@@ -77,10 +81,7 @@ server.route({
   method: 'GET',
   path: '/',
   handler: function(request, reply) {
-    reply.view('index', {
-      title: 'examples/views/jade/index.js | Hapi ' + Hapi.version,
-      message: 'Index - Hello World!'
-    });
+    reply.view('index');
   }
 });
 
@@ -94,9 +95,14 @@ var gremlinQuery = function(request, reply) {
     "has('name','Kevin Bacon')",
     'repeat(__.outE().inV().simplePath())',
     "until(__.has('name','"+actor+"'))",
-    "limit(6)",
+    "limit(12)",
     'path()'
   ]
+
+  // Direct
+  if (request.params.direct) {
+    traversal[3] = 'repeat(__.outE().inV().dedup().simplePath())';
+  }
   //g.V().has('type','Actor').has('name','Kevin Bacon').aggregate('x').repeat(__.outE().inV().simplePath()).until(__.has('name','Robin Wright Penn')).path()
   console.log('g.' + traversal.join('.'));
   movies.gremlin(traversal, function(e, r, b){
@@ -125,6 +131,12 @@ server.route({
 server.route({
   method: 'GET',
   path: '/bacon/{actor}',
+  handler: gremlinQuery
+});
+
+server.route({
+  method: 'GET',
+  path: '/bacon/{actor}/{direct}',
   handler: gremlinQuery
 });
 

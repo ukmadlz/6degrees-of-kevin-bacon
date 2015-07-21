@@ -26,8 +26,11 @@ head
           .form-group
             label(for='actors')  
             //- select#actors.form-control(name="actors")
-            #actors
-              input#actor.form-control.typeahead(type="text", placeholder="Actor")
+            input#actor.form-control.typeahead(type="text", placeholder="Actor")
+          .checkbox
+            label
+              input#direct(type="checkbox")
+              | Direct Path
           button.btn.btn-default(type='submit') Find
 
       .row.marketing

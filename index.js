@@ -18,7 +18,7 @@ if (process.env.VCAP_SERVICES) {
 var movies = gds({
   url: config.credentials.apiURL,
   username: config.credentials.username,
-  password: config.credentials.password
+  password: config.credentials.password   
 });
 
 var server = new Hapi.Server({ debug: { request: ['error'] } });
@@ -94,15 +94,15 @@ var gremlinQuery = function(request, reply) {
     "hasLabel('person')",
     "has('type','Actor')",
     "has('name','Kevin Bacon')",
-    'repeat(__.outE().inV().simplePath())',
+    'repeat(__.outE().inV().dedup().simplePath())',
     "until(__.hasLabel('person').has('name','"+actor+"'))",
     "limit(12)",
     'path()'
   ]
 
-  // Direct
-  if (request.params.direct) {
-    traversal[3] = 'repeat(__.outE().inV().dedup().simplePath())';
+  // Show All Paths
+  if (request.params.showall) {
+    traversal[3] = 'repeat(__.outE().inV().simplePath())';
   }
   //g.V().has('type','Actor').has('name','Kevin Bacon').aggregate('x').repeat(__.outE().inV().simplePath()).until(__.has('name','Robin Wright Penn')).path()
   console.log('g.' + traversal.join('.'));
@@ -137,7 +137,7 @@ server.route({
 
 server.route({
   method: 'GET',
-  path: '/bacon/{actor}/{direct}',
+  path: '/bacon/{actor}/{showall}',
   handler: gremlinQuery
 });
 

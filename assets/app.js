@@ -14,6 +14,7 @@ $(document).ready(function() {
   });
 
   // Find the Bacon number
+  var ajaxRequest = [];
   $('form').on('submit', function(e) {
     e.preventDefault();
 
@@ -21,11 +22,14 @@ $(document).ready(function() {
 
     var url = '/bacon/' + actorName;
 
-    if ($('#direct').is(':checked')) {
-      url = url + '/direct';
+    if ($('#showall').is(':checked')) {
+      url = url + '/showall';
     }
 
-    $.get(url, function(data) {
+    if (ajaxRequest.length > 0) {
+      ajaxRequest[0].abort();
+    }
+    ajaxRequest.push($.get(url, function(data) {
       console.log(data);
       $('#query').html(data.query);
       $('#graph-data').html(JSON.stringify(data.data, null, 4));
@@ -96,7 +100,7 @@ $(document).ready(function() {
       };
       var options = {};
       var network = new vis.Network(container, data, options);
-    })
+    }));
   });
 
 });

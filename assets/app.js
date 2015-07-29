@@ -18,6 +18,13 @@ $(document).ready(function() {
   $('form').on('submit', function(e) {
     e.preventDefault();
 
+    var graphContainer = $('#graph-data').parent().parent().parent();
+    var queryContainer = $('#query').parent().parent().parent();
+
+    // Loading spinner
+    var loadingSpinner = '<i class="fa fa-spinner fa-spin"></i>';
+    $('#graph-data, #query, #the-graph').html(loadingSpinner);
+
     var actorName = $('#actor').val();
 
     var url = '/bacon/' + actorName;
@@ -32,7 +39,14 @@ $(document).ready(function() {
     ajaxRequest.push($.get(url, function(data) {
       console.log(data);
       $('#query').html(data.query);
+      if (queryContainer.hasClass('hidden')) {
+        queryContainer.removeClass('hidden');
+      }
+
       $('#graph-data').html(JSON.stringify(data.data, null, 4));
+      if (graphContainer.hasClass('hidden')) {
+        graphContainer.removeClass('hidden');
+      }
 
       var rawNodes = [];
       var ignoreNodes = [];

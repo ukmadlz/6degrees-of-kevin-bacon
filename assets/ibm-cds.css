@@ -9,7 +9,7 @@ body {
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   color: #222222; }
 
-h1 {
+h1, .heading {
   font-family: "LubalinDemiIBM"; }
 
 a {

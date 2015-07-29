@@ -49,6 +49,26 @@ server.route({
 
 server.route({
     method: 'GET',
+    path: '/assets/ibm-cds.css',
+    handler: {
+        file: function (request) {
+            return 'assets/ibm-cds.css';
+        }
+    }
+});
+
+server.route({
+    method: 'GET',
+    path: '/assets/ibm.woff',
+    handler: {
+        file: function (request) {
+            return 'assets/ibm.woff';
+        }
+    }
+});
+
+server.route({
+    method: 'GET',
     path: '/assets/bloodhound.min.js',
     handler: {
         file: function (request) {

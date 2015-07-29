@@ -1,0 +1,30 @@
+/*
+  General
+ */
+@font-face {
+  font-family: "LubalinDemiIBM";
+  src: url("/assets/ibm.woff") format("woff"); }
+
+body {
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  color: #222222; }
+
+h1 {
+  font-family: "LubalinDemiIBM"; }
+
+a {
+  color: #00649D; }
+  a :visited {
+    color: #53049C; }
+
+/*
+  Bootstrap Specific
+ */
+.navbar {
+  background: #222222; }
+  .navbar .navbar-text {
+    color: #999999;
+    font-family: "LubalinDemiIBM"; }
+
+.btn-primary {
+  background: #A72185; }

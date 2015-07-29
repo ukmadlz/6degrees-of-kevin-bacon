@@ -28,9 +28,16 @@ $(document).ready(function() {
     var actorName = $('#actor').val();
 
     var url = '/bacon/' + actorName;
+    traversal.addActor(actorName);
 
     if ($('#showall').is(':checked')) {
       url = url + '/showall';
+      traversal.allPaths();
+    }
+
+    $('#query').html(traversal.toString());
+    if (queryContainer.hasClass('hidden')) {
+      queryContainer.removeClass('hidden');
     }
 
     if (ajaxRequest.length > 0) {
@@ -39,9 +46,6 @@ $(document).ready(function() {
     ajaxRequest.push($.get(url, function(data) {
       console.log(data);
       $('#query').html(data.query);
-      if (queryContainer.hasClass('hidden')) {
-        queryContainer.removeClass('hidden');
-      }
 
       $('#graph-data').html(JSON.stringify(data.data, null, 4));
       if (graphContainer.hasClass('hidden')) {

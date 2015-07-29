@@ -1,5 +1,6 @@
-var Hapi   = require('hapi');
-var gds    = require('gds-wrapper');
+var Hapi      = require('hapi');
+var gds       = require('gds-wrapper');
+var traversal = require('./assets/traversal')
 
 // Set config
 if (process.env.VCAP_SERVICES) {
@@ -43,6 +44,16 @@ server.route({
     handler: {
         file: function (request) {
             return 'assets/app.js';
+        }
+    }
+});
+
+server.route({
+    method: 'GET',
+    path: '/assets/traversal.js',
+    handler: {
+        file: function (request) {
+            return 'assets/traversal.js';
         }
     }
 });
@@ -109,24 +120,28 @@ var gremlinQuery = function(request, reply) {
   // Kev 2097192
   // Bill 1720408
   var actor = (request.params.actor)?request.params.actor:'Bill Paxton';
-  var traversal = [
-    'V()',
-    "hasLabel('person')",
-    "has('type','Actor')",
-    "has('name','Kevin Bacon')",
-    'repeat(__.outE().inV().dedup().simplePath())',
-    "until(__.hasLabel('person').has('name','"+actor+"'))",
-    "limit(12)",
-    'path()'
-  ]
+  traversal.addActor(actor);
+
+  // var traversal = [
+  //   'V()',
+  //   "hasLabel('person')",
+  //   "has('type','Actor')",
+  //   "has('name','Kevin Bacon')",
+  //   'repeat(__.outE().inV().dedup().simplePath())',
+  //   "until(__.hasLabel('person').has('name','"+actor+"'))",
+  //   "limit(12)",
+  //   'path()'
+  // ]
 
   // Show All Paths
   if (request.params.showall) {
-    traversal[3] = 'repeat(__.outE().inV().simplePath())';
+    // traversal[4] = 'repeat(__.outE().inV().simplePath())';
+    traversal.allPaths();
   }
   //g.V().has('type','Actor').has('name','Kevin Bacon').aggregate('x').repeat(__.outE().inV().simplePath()).until(__.has('name','Robin Wright Penn')).path()
-  console.log('g.' + traversal.join('.'));
-  movies.gremlin(traversal, function(e, r, b){
+  console.log(traversal.traversal);
+  console.log(traversal.toString());
+  movies.gremlin(traversal.traversal, function(e, r, b){
     if (e) {
       console.log('--Error--');
       console.log(e);

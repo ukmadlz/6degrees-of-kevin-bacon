@@ -5,7 +5,7 @@ var traversal = require('./assets/traversal');
 // Set config
 if (process.env.VCAP_SERVICES) {
   var vcapServices = JSON.parse(process.env.VCAP_SERVICES);
-  var graphService = 'GraphDataStore';;
+  var graphService = 'GraphDataStore';
   if (vcapServices[graphService] && vcapServices[graphService].length > 0) {
     var config = vcapServices[graphService][0];
   } else {

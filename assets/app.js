@@ -3,14 +3,14 @@ $(document).ready(function() {
   var actors = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.whitespace,
     queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: '/actors'
+    prefetch: '/actors',
   });
 
   // passing in `null` for the `options` arguments will result in the default
   // options being used
   $('#actor').typeahead(null, {
     name: 'actors',
-    source: actors
+    source: actors,
   });
 
   // Find the Bacon number
@@ -35,7 +35,8 @@ $(document).ready(function() {
       traversal.allPaths();
     }
 
-    $('#query').html(traversal.toString());
+    $('#query').html(traversal.annotated());
+    $('[data-toggle="tooltip"]').tooltip();
     if (queryContainer.hasClass('hidden')) {
       queryContainer.removeClass('hidden');
     }
@@ -43,9 +44,11 @@ $(document).ready(function() {
     if (ajaxRequest.length > 0) {
       ajaxRequest[0].abort();
     }
+
     ajaxRequest.push($.get(url, function(data) {
       console.log(data);
-      $('#query').html(data.query);
+
+      // $('#query').html(data.query);
 
       $('#graph-data').html(JSON.stringify(data.data, null, 4));
       if (graphContainer.hasClass('hidden')) {
@@ -65,26 +68,29 @@ $(document).ready(function() {
             if (ignoreNodes.indexOf(obj.id) < 0) {
               var nodeObject = {
                 id: obj.id,
-                label: obj.properties.name[0].value
-              }
+                label: obj.properties.name[0].value,
+              };
+
               if (obj.label == 'film') {
                 nodeObject.color = {
                   background:'#F03967',
                   border:'#713E7F',
                   highlight:{
                     background:'red',
-                    border:'black'
-                  }
+                    border:'black',
+                  },
                 };
               }
+
               if (obj.label == 'person' && obj.properties.name[0].value == 'Kevin Bacon') {
                 nodeObject.shape = 'circularImage';
                 nodeObject.image = 'http://www.nigelfarndale.com/wp-content/uploads/2013/11/kevin-bacon-0808-medium-new.jpg';
               } else if (obj.label == 'person' && obj.properties.name[0].value == actorName) {
                 nodeObject.color = {
-                  background:'#dff0d8'
+                  background:'#dff0d8',
                 };
               }
+
               rawNodes.push(nodeObject);
               ignoreNodes.push(obj.id);
             }
@@ -94,7 +100,7 @@ $(document).ready(function() {
             if (ignoreEdges.indexOf(obj.id) < 0) {
               rawEdges.push({
                 from: obj.outV,
-                to: obj.inV
+                to: obj.inV,
               });
               ignoreEdges.push(obj.id);
             }
@@ -102,7 +108,7 @@ $(document).ready(function() {
         }
       }
 
-      console.log(rawNodes)
+      console.log(rawNodes);
 
       // create an array with nodes
       var nodes = new vis.DataSet(rawNodes);
@@ -114,7 +120,7 @@ $(document).ready(function() {
       var container = document.getElementById('the-graph');
       var data = {
         nodes: nodes,
-        edges: edges
+        edges: edges,
       };
       var options = {};
       var network = new vis.Network(container, data, options);

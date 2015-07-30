@@ -23,7 +23,7 @@ $(document).ready(function() {
 
     // Loading spinner
     var loadingSpinner = '<i class="fa fa-spinner fa-spin"></i>';
-    $('#graph-data, #query, #the-graph').html(loadingSpinner);
+    $('#graph-data, #query, #the-graph, #bacon-number').html(loadingSpinner);
 
     var actorName = $('#actor').val();
 
@@ -59,6 +59,7 @@ $(document).ready(function() {
       var ignoreNodes = [];
       var rawEdges = [];
       var ignoreEdges = [];
+      var baconNumber = 0;
 
       for (i = 0; i < data.data.length; i++) {
         var path = data.data[i].objects;
@@ -80,6 +81,8 @@ $(document).ready(function() {
                     border:'black',
                   },
                 };
+              } else if (obj.label == 'person') {
+                baconNumber++;
               }
 
               if (obj.label == 'person' && obj.properties.name[0].value == 'Kevin Bacon') {
@@ -124,6 +127,9 @@ $(document).ready(function() {
       };
       var options = {};
       var network = new vis.Network(container, data, options);
+
+      // Apply the Bacon Number
+      $('#bacon-number').html('<strong>' + (baconNumber - 1) + '</strong>');
     }));
   });
 

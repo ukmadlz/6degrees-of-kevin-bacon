@@ -137,7 +137,7 @@ var gremlinQuery = function(request, reply) {
 
     var b = JSON.parse(b);
     returnData = {};
-    returnData.query = traversal.join('.');
+    returnData.query = traversal.toString();
     returnData.data = b.result.data;
 
     console.log(b);

@@ -121,7 +121,7 @@ var gremlinQuery = function(request, reply) {
   traversal.addActor(actor);
 
   // Show All Paths
-  if (request.params.showall) {
+  if (request.params.showall == 'showall') {
     traversal.allPaths();
   }
 
@@ -147,7 +147,7 @@ var gremlinQuery = function(request, reply) {
 
 server.route({
   method: 'GET',
-  path: '/bacon',
+  path: '/bacon/{actor}/{showall}',
   handler: gremlinQuery,
 });
 
@@ -159,7 +159,7 @@ server.route({
 
 server.route({
   method: 'GET',
-  path: '/bacon/{actor}/{showall}',
+  path: '/bacon',
   handler: gremlinQuery,
 });
 

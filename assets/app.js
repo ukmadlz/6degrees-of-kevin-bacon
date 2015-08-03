@@ -60,9 +60,11 @@ $(document).ready(function() {
       var rawEdges = [];
       var ignoreEdges = [];
       var baconNumber = 0;
+      var tempBaconNumber = 0;
 
       for (i = 0; i < data.data.length; i++) {
         var path = data.data[i].objects;
+        var tempBaconNumber = 0;
         for (j = 0; j < path.length; j++) {
           var obj = path[j];
           if (obj.type == 'vertex') {
@@ -81,8 +83,6 @@ $(document).ready(function() {
                     border:'black',
                   },
                 };
-              } else if (obj.label == 'person') {
-                baconNumber++;
               }
 
               if (obj.label == 'person' && obj.properties.name[0].value == 'Kevin Bacon') {
@@ -96,6 +96,10 @@ $(document).ready(function() {
 
               rawNodes.push(nodeObject);
               ignoreNodes.push(obj.id);
+
+              if (obj.label == 'person') {
+               tempBaconNumber++;
+              }
             }
           }
 
@@ -107,6 +111,16 @@ $(document).ready(function() {
               });
               ignoreEdges.push(obj.id);
             }
+          }
+        }
+        // Check for shortest bacon!
+        if (tempBaconNumber > 0) {
+          if(baconNumber == 0
+          && tempBaconNumber > 0) {
+            baconNumber = tempBaconNumber;
+          }
+          if (tempBaconNumber < baconNumber) {
+            baconNumber = tempBaconNumber;
           }
         }
       }

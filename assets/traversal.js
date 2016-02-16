@@ -1,6 +1,6 @@
 var traversal = {};
 
-(function() {
+(function () {
 
   // Standard traversal
   traversal.traversal = [
@@ -11,7 +11,7 @@ var traversal = {};
     "has('name','Kevin Bacon')",
     'repeat(__.outE().inV().dedup().simplePath())',
     "until(__.hasLabel('person').has('name','Bill Paxton'))",
-    "limit(12)",
+    'limit(12)',
     'path()',
   ];
 
@@ -29,25 +29,31 @@ var traversal = {};
   ];
 
   // Actor
-  traversal.addActor = function(actor) {
+  traversal.addActor = function (actor) {
     traversal.traversal[6]  = "until(__.hasLabel('person').has('name','" + actor + "'))";
     traversal.annotation[6] = 'Repeat until the current Vertex has a label of person, and a name property of ' + actor;
     return traversal;
   };
 
   // All Paths
-  traversal.allPaths = function() {
+  traversal.allPaths = function () {
     traversal.traversal[5] = 'repeat(__.outE().inV().simplePath())';
     return traversal;
   };
 
+  // All Paths
+  traversal.resetAllPaths = function () {
+    traversal.traversal[5] = 'repeat(__.outE().inV().dedup().simplePath())';
+    return traversal;
+  };
+
   // As a string
-  traversal.toString = function() {
+  traversal.toString = function () {
     return traversal.traversal.join('.');
   };
 
   // Annotated string
-  traversal.annotated = function() {
+  traversal.annotated = function () {
     var annotation = [];
 
     for (i = 0; i < traversal.traversal.length; i++) {

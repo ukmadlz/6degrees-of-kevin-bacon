@@ -31,6 +31,9 @@ $(document).ready(function () {
     var url = '/bacon/' + actorName;
     traversal.addActor(actorName);
 
+    // Reset All Paths
+    traversal.resetAllPaths();
+
     if ($('#showall').is(':checked')) {
       url = url + '/showall';
       traversal.allPaths();

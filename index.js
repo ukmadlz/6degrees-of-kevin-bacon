@@ -78,8 +78,11 @@ var gremlinQuery = function (request, reply) {
   var actor = (request.params.actor) ? request.params.actor : 'Bill Paxton';
   traversal.addActor(actor);
 
+  // Reset All Paths
+  traversal.resetAllPaths();
+
   // Show All Paths
-  if (request.params.showall == 'showall') {
+  if (request.params.showall === 'showall') {
     traversal.allPaths();
   }
 

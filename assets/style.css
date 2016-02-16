@@ -32,7 +32,7 @@ form .form-group input {
   background: none;
   color: #BCBEC0;
   border: none;
-  border-bottom: 1px solid #BCBEC0;
+  border-bottom: 2px solid #BCBEC0;
   padding: 0.6rem;
   font-size: 1rem;
   font-style: italic;
@@ -56,6 +56,7 @@ form .form-group, form .checkbox {
   background: #231F20;
 }
 .tt-menu .tt-selectable {
+  padding: 1rem;
   cursor: pointer;
 }
 

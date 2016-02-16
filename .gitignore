@@ -3,3 +3,4 @@ config.json
 graphson
 npm-debug.log
 sample.json
+.env

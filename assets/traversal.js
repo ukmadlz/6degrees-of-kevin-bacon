@@ -52,7 +52,7 @@ var traversal = {};
 
     for (i = 0; i < traversal.traversal.length; i++) {
       //annotation.push('<a href="#" data-toggle="tooltip" data-placement="right"  title="' + traversal.annotation[i] + '">' + traversal.traversal[i] + '</a>');
-      annotation.push(traversal.traversal[i] + '  // ' + traversal.annotation[i]);
+      annotation.push(traversal.traversal[i] + '  // <span class="blue-color">' + traversal.annotation[i] + '</span>');
     }
 
     return annotation.join('\n.');

@@ -2,7 +2,7 @@
 'use strict';
 
 var fs             = require('fs');
-var gds            = require('gds-wrapper');
+var GDS            = require('gds-wrapper');
 var ArgumentParser = require('argparse').ArgumentParser;
 var csv            = require('fast-csv');
 var uuid           = require('uuid');
@@ -11,37 +11,39 @@ var uuid           = require('uuid');
 var parser = new ArgumentParser({
   version: '0.0.1',
   addHelp:true,
-  description: 'Import actors and films into GraphDB'
+  description: 'Import actors and films into GraphDB',
 });
 parser.addArgument(
-  [ '-c', '--credentials' ],
+  ['-c', '--credentials'],
   {
-    help: 'JSON file containing access credentials'
+    help: 'JSON file containing access credentials',
   }
 );
 parser.addArgument(
-  [ '-p', '--path' ],
+  ['-p', '--path'],
   {
-    help: 'Path to CSV'
+    help: 'Path to CSV',
   }
 );
 var args = parser.parseArgs();
 
 // Grab the config
-fs.readFile(args.credentials, 'utf8', function (err,config) {
+fs.readFile(args.credentials, 'utf8', function (err, config) {
   if (err) {
     return console.log(err);
   }
 
   var config = JSON.parse(config);
 
+  // Format Config
   var gdsConfig = {
     url: config.credentials.apiURL,
     username: config.credentials.username,
-    password: config.credentials.password
+    password: config.credentials.password,
   };
 
-  var importDb = gds(gdsConfig);
+  // Setup wrapper library
+  var importDb = new GDS(gdsConfig);
 
   var stream = fs.createReadStream(args.path);
 
@@ -52,7 +54,7 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
   var filmVertices  = [];
   var graphsonArray = [];
   var csvStream = csv()
-      .on('data', function(data) {
+      .on('data', function (data) {
         importData.push(data);
         if (actorList.indexOf(data[0]) < 0) {
           actorList.push(data[0]);
@@ -62,7 +64,7 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
           filmList.push(data[2]);
         }
       })
-      .on('end', function() {
+      .on('end', function () {
         // Build Actor Vertices
         for (var i = 0; i < actorList.length; i++) {
           var vertex = {
@@ -71,16 +73,18 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
             properties: {
               name: [{
                 id: uuid.v4(),
-                value: actorList[i]
-              }],
+                value: actorList[i],
+              },
+              ],
               type: [{
                 id: uuid.v4(),
-                value: 'Actor'
-              }]
+                value: 'Actor',
+              },
+            ],
             },
             inE: {},
-            outE: {}
-          }
+            outE: {},
+          };
           actorVertices[i] = vertex;
         }
 
@@ -92,16 +96,18 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
             properties: {
               name: [{
                 id: uuid.v4(),
-                value: filmList[i]
-              }],
+                value: filmList[i],
+              },
+              ],
               type: [{
                 id: uuid.v4(),
-                value: 'Film'
-              }]
+                value: 'Film',
+              },
+              ],
             },
             inE: {},
-            outE: {}
-          }
+            outE: {},
+          };
           filmVertices[i] = vertex;
         }
 
@@ -110,63 +116,77 @@ fs.readFile(args.credentials, 'utf8', function (err,config) {
           var actorId = actorList.indexOf(importData[i][0]);
           var filmId = filmList.indexOf(importData[i][2]);
           var relationship = importData[i][1];
+
           // Actor -> Film
           var edgeId = uuid.v4();
           var outE = {
             id: edgeId,
-            inV: 'f' + (filmId + 1)
-          }
-          if(typeof actorVertices[actorId].outE[relationship] == 'undefined') {
+            inV: 'f' + (filmId + 1),
+          };
+
+          if (typeof actorVertices[actorId].outE[relationship] == 'undefined') {
             actorVertices[actorId].outE[relationship] = [];
           }
+
           actorVertices[actorId].outE[relationship].push(outE);
           var inE = {
             id: edgeId,
-            inV: 'a' + (actorId + 1)
-          }
-          if(typeof filmVertices[filmId].inE[relationship] == 'undefined') {
+            inV: 'a' + (actorId + 1),
+          };
+
+          if (typeof filmVertices[filmId].inE[relationship] == 'undefined') {
             filmVertices[filmId].inE[relationship] = [];
-          }
+          };
+
           filmVertices[filmId].inE[relationship].push(inE);
+
           // Film -> Actor
           var edgeId = uuid.v4();
           var outE = {
             id: edgeId,
-            inV: 'a' + (actorId + 1)
-          }
-          if(typeof filmVertices[filmId].outE[relationship] == 'undefined') {
+            inV: 'a' + (actorId + 1),
+          };
+
+          if (typeof filmVertices[filmId].outE[relationship] == 'undefined') {
             filmVertices[filmId].outE[relationship] = [];
-          }
+          };
+
           filmVertices[filmId].outE[relationship].push(outE);
           var inE = {
             id: edgeId,
-            inV: 'f' + (filmId + 1)
-          }
-          if(typeof actorVertices[actorId].inE[relationship] == 'undefined') {
+            inV: 'f' + (filmId + 1),
+          };
+
+          if (typeof actorVertices[actorId].inE[relationship] == 'undefined') {
             actorVertices[actorId].inE[relationship] = [];
-          }
+          };
+
           actorVertices[actorId].inE[relationship].push(inE);
 
-        }
+        };
+
         for (var i = 0; i < actorVertices.length; i++) {
           graphsonArray.push(JSON.stringify(actorVertices[i]));
-        }
+        };
+
         for (var i = 0; i < filmVertices.length; i++) {
           graphsonArray.push(JSON.stringify(filmVertices[i]));
-        }
+        };
+
         // console.log(graphsonArray);
         var graphsonString = graphsonArray.join('\n');
         console.log(graphsonString);
-        importDb.io.bulkload.graphson(graphsonString, function(e, r, b){
+        importDb.io().graphson(graphsonString, function (e, b) {
           console.log(e);
           console.log(b);
         });
-        fs.writeFile("graphson", graphsonString, function(err) {
-            if(err) {
-                return console.log(err);
-            }
 
-            console.log("The file was saved!");
+        fs.writeFile('graphson', graphsonString, function (err) {
+          if (err) {
+            return console.log(err);
+          }
+
+          console.log('The file was saved!');
         });
       });
 

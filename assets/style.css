@@ -1,0 +1,92 @@
+.hero {
+  padding: 1rem 2.5rem;
+  padding-left: 4rem;
+  color: #808285;
+  background: #231F20;
+  background-image: url('./bacongraph.png');
+  background-repeat: no-repeat;
+  background-position: right;
+}
+.hero .topline p, .hero .topline img {
+  float: left;
+}
+.hero p.navbar-text {
+  font-size: 1.5rem;
+  font-weight: bolder;
+  color: #BCBEC0;
+}
+.hero h1 {
+  color: #F1F2F2;
+}
+.hero .jumbotron {
+  clear: both;
+  padding: 6rem 2rem;
+}
+.hero .jumbotron p {
+  width: 50%;
+}
+form label, form button {
+  float: left;
+}
+form .form-group input {
+  background: none;
+  color: #BCBEC0;
+  border: none;
+  border-bottom: 1px solid #BCBEC0;
+  padding: 0.6rem;
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: bold;
+  width: 10rem;
+}
+form button {
+  background: none;
+  border-color: #41D6C3;
+  color: #41D6C3;
+  font-size: 1rem;
+  padding: 0.5rem 2rem;
+  margin-left: 1em;
+}
+form .form-group, form .checkbox {
+  clear: both;
+}
+
+/* DropDown */
+.tt-menu {
+  background: #231F20;
+}
+.tt-menu .tt-selectable {
+  cursor: pointer;
+}
+
+.row {
+  padding: 1rem 6rem;
+}
+.row, footer {
+  clear: both;
+}
+.row .number, .row .query {
+  float: left;
+}
+.number {
+  width: 30%;
+}
+.query {
+  width: 68%;
+  margin-left: 1rem;
+}
+
+/* Query */
+.box {
+  padding: 1rem;
+  background: #E6E7E8;
+}
+.box h4 {
+  color: #A7A9AC;
+  font-size: 2rem;
+  padding: 0;
+  margin: 0;
+}
+.blue-color {
+  color: #00BDC6;
+}

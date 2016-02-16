@@ -4,3 +4,4 @@ graphson
 npm-debug.log
 sample.json
 data
+.env

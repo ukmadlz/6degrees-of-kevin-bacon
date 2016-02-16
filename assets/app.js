@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
   var actors = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.whitespace,
@@ -15,11 +15,12 @@ $(document).ready(function() {
 
   // Find the Bacon number
   var ajaxRequest = [];
-  $('form').on('submit', function(e) {
+  $('form').on('submit', function (e) {
     e.preventDefault();
 
-    var graphContainer = $('#graph-data').parent().parent().parent();
-    var queryContainer = $('#query').parent().parent().parent();
+    var graphDataContainer = $('#graph-data').parent().parent().parent();
+    var graphVisContainer = $('#the-graph').parent().parent();
+    var queryContainer = $('#query').parent().parent().parent().parent();
 
     // Loading spinner
     var loadingSpinner = '<i class="fa fa-spinner fa-spin"></i>';
@@ -45,14 +46,15 @@ $(document).ready(function() {
       ajaxRequest[0].abort();
     }
 
-    ajaxRequest.push($.get(url, function(data) {
+    ajaxRequest.push($.get(url, function (data) {
       console.log(data);
 
       // $('#query').html(data.query);
 
       $('#graph-data').html(JSON.stringify(data.data, null, 4));
-      if (graphContainer.hasClass('hidden')) {
-        graphContainer.removeClass('hidden');
+      if (graphDataContainer.hasClass('hidden')) {
+        graphDataContainer.removeClass('hidden');
+        graphVisContainer.removeClass('hidden');
       }
 
       var rawNodes = [];
@@ -72,12 +74,14 @@ $(document).ready(function() {
               var nodeObject = {
                 id: obj.id,
                 label: obj.properties.name[0].value,
+                shape: 'circle',
               };
 
               if (obj.label == 'film') {
                 nodeObject.color = {
-                  background:'#F03967',
+                  background:'#41D6C3',
                   border:'#713E7F',
+                  color: '#FFFFFF',
                   highlight:{
                     background:'red',
                     border:'black',
@@ -90,16 +94,16 @@ $(document).ready(function() {
                 nodeObject.image = 'http://www.nigelfarndale.com/wp-content/uploads/2013/11/kevin-bacon-0808-medium-new.jpg';
               } else if (obj.label == 'person' && obj.properties.name[0].value == actorName) {
                 nodeObject.color = {
-                  background:'#dff0d8',
+                  background:'#00B4A0',
                 };
               }
 
               rawNodes.push(nodeObject);
               ignoreNodes.push(obj.id);
+            }
 
-              if (obj.label == 'person') {
-               tempBaconNumber++;
-              }
+            if (obj.label == 'person') {
+              tempBaconNumber++;
             }
           }
 
@@ -113,12 +117,14 @@ $(document).ready(function() {
             }
           }
         }
+
         // Check for shortest bacon!
         if (tempBaconNumber > 0) {
-          if(baconNumber == 0
+          if (baconNumber == 0
           && tempBaconNumber > 0) {
             baconNumber = tempBaconNumber;
           }
+
           if (tempBaconNumber < baconNumber) {
             baconNumber = tempBaconNumber;
           }

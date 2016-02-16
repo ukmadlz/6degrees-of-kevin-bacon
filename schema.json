@@ -1,0 +1,24 @@
+{
+	"propertyKeys": [
+		{ "name": "name", "dataType": "String", "cardinality": "SINGLE" },
+		{ "name": "type", "dataType": "String", "cardinality": "SINGLE" }
+	],
+	"vertexLabels": [
+		{ "name": "person" },
+		{ "name": "film" }
+	],
+	"edgeLabels": [
+		{ "name": "actor" }
+	],
+	"vertexIndexes": [
+		{"name": "vertexByName",
+		"propertyKeys": ["name"],
+		"composite": true,
+		"unique": false},
+		{"name": "vertexByType",
+		"propertyKeys": ["type"],
+		"composite": true,
+		"unique": false}
+	],
+	"edgeIndexes": []
+}

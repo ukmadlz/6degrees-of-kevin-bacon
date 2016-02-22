@@ -73,7 +73,7 @@ form .form-group, form .checkbox {
   width: 30%;
 }
 .query {
-  width: 68%;
+  width: 66%;
   margin-left: 1rem;
 }
 
@@ -90,4 +90,8 @@ form .form-group, form .checkbox {
 }
 .blue-color {
   color: #00BDC6;
+}
+
+pre {
+  white-space: pre-wrap;
 }

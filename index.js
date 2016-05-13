@@ -19,7 +19,7 @@
 // Necessary Libs
 var Hapi      = require('hapi');
 var Path      = require('path');
-var GDS       = require('gds-wrapper');
+var GDS       = require('ibm-graph-client');
 var traversal = require('./assets/traversal');
 
 // Load env

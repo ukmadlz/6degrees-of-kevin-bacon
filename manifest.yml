@@ -1,0 +1,17 @@
+---
+declared-services:
+  IBM Graph:
+    label: IBM Graph
+    plan: Entry
+
+applications:
+- name: six-degrees-of-kevin-bacon
+  memory: 256M
+  framework: node
+  instances: 1
+  path: .
+  buildpack: sdk-for-nodejs
+  host: six-degrees
+  random-route: true
+  services:
+  - six-degrees

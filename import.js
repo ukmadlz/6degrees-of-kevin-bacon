@@ -18,7 +18,7 @@
  */
 
 var fs             = require('fs');
-var GDS            = require('gds-wrapper');
+var GDS            = require('ibm-graph-client');
 var ArgumentParser = require('argparse').ArgumentParser;
 var csv            = require('fast-csv');
 var uuid           = require('uuid');

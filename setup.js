@@ -17,7 +17,7 @@
  */
 
 require('dotenv').load({ silent: true });
-var GDS = require('gds-wrapper');
+var GDS = require('ibm-graph-client');
 
 // For remote
 if (process.env.VCAP_SERVICES) {
@@ -44,8 +44,12 @@ graph.session(function (token) {
 
     var schema = require('./schema.json');
     graph.schema().set(schema, function (error, body) {
-      if (error) console.log('Error:', error);
-      console.log(body.result.data);
+      if (error) {
+        console.log('Error:', error);
+        console.log(body);
+      } else {
+        console.log(body.result.data);
+      }
     });
 
   });

@@ -22,7 +22,7 @@ cd 6degrees-of-kevin-bacon
 
 5. Open the `manifest.yml` file and change the `host` value to something unique.
 
-  The host you choose will determinate the subdomain of your application's URL.
+The host you choose will determine the subdomain of your application's URL.
 
 6. Connect to Bluemix in the command line tool and log in.
 
@@ -47,10 +47,33 @@ cf login
 cf push
 ```
 
-## Running the application locally
+9. Import the sample data
+
+Put your service credentials into a new file named `config.json`. Then, run the import script:
+
+```
+./import.js -c config.json -p data/movies-demo.csv
+```
+
 
 ## Structure of this application
 
+```
+├── assets - frontend assets: css, js, images
+├── data
+│   └── movies-demo.csv - movie sample data in csv format
+├── import.js - import script to import movie data into IBM Graph
+├── index.js - main program
+├── manifest.yml - manifest that describes the application and its deployment to cloud foundry
+├── package.json - node package file with metadata about the project, e.g. dependencies
+├── schema.json - the schema definition for the sample data
+├── setup.js - setup script to set the schema
+└── templates
+    └── index.jade - jade template
+```
+
 ## Contribute
+
+We are more than happy to accept external contributions to this project, be it in the form of issues and pull requests. If you find a bug, please report it via the Issues section or even better, fork the project and submit a pull request with your fix! 
 
 

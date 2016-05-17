@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ukmadlz/6degrees-of-kevin-bacon.git"
+    "url": "https://github.com/ibm-cds-labs/6degrees-of-kevin-bacon.git"
   },
   "author": "Mike Elsmore <mike.elsmore@uk.ibm.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/ukmadlz/6degrees-of-kevin-bacon/issues"
+    "url": "https://github.com/ibm-cds-labs/6degrees-of-kevin-bacon/issues"
   },
-  "homepage": "https://github.com/ukmadlz/6degrees-of-kevin-bacon",
+  "homepage": "https://github.com/ibm-cds-labs/6degrees-of-kevin-bacon",
   "dependencies": {
     "argparse": "^1.0.2",
     "cf-deployment-tracker-client": "0.0.8",

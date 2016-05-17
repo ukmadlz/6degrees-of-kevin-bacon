@@ -101,7 +101,7 @@ Put your service credentials into a new file named `config.json`. Then, run the 
 3. Go to the project folder in a terminal and run:
     `npm install`
 4. Start the application
-5.  `node app.js`
+5.  `node index.js`
 
 ## Structure of this application
 
@@ -123,7 +123,7 @@ Put your service credentials into a new file named `config.json`. Then, run the 
 
 The fastest way to deploy this application to Bluemix is to click the **Deploy to Bluemix** button below.
 
-[![Deploy to Bluemix](https://deployment-tracker.mybluemix.net/stats/1c571004f9ba387375aab56428f05256/button.svg)](https://bluemix.net/deploy?repository=https://github.com/ibm-cds-labs/6degrees-of-kevin-bacon)
+[![Deploy to Bluemix](https://deployment-tracker.mybluemix.net/stats/4dfc8a74f582329adf35199126090e45/button.svg)](https://bluemix.net/deploy?repository=https://github.com/ibm-cds-labs/6degrees-of-kevin-bacon.git)
 
 **Don't have a Bluemix account?** If you haven't already, you'll be prompted to sign up for a Bluemix account when you click the button.  Sign up, verify your email address, then return here and click the the **Deploy to Bluemix** button again. Your new credentials let you deploy to the platform and also to code online with Bluemix and Git. If you have questions about working in Bluemix, find answers in the [Bluemix Docs](https://www.ng.bluemix.net/docs/).
 

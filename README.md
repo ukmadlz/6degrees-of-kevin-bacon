@@ -55,6 +55,53 @@ Put your service credentials into a new file named `config.json`. Then, run the 
 ./import.js -c config.json -p data/movies-demo.csv
 ```
 
+## Running locally
+  The application uses [Node.js](http://nodejs.org/) and [npm](https://www.npmjs.com/) so you will have to download and install them as part of the steps below.
+
+1. Duplicate the `.env.example` to `.env`
+
+  ```sh
+  cp .env.example .env
+  ```
+
+2. Copy the credentials from your `ibm-graph` service in Bluemix to `.env`, you can see the credentials using:
+
+    ```sh
+    $ cf env <application-name>
+    ```
+    Example output:
+    ```sh
+    System-Provided:
+    {
+     "VCAP_SERVICES": {
+      "IBM Graph": [
+       {
+        "credentials": {
+         "apiURL": "<graph-url>",
+         "password": "<graph-password>",
+         "username": "<graph-username>"
+        },
+        "label": "IBM Graph",
+        "name": "six-degrees",
+        "plan": "Entry",
+        "tags": [
+         "ibm_created",
+         "data_management",
+         "ibm_beta"
+        ]
+       }
+      ]
+     }
+    }
+    ```
+
+    You need to copy `graph-username`, `graph-password` and `graph-url`.
+
+2. Install [Node.js](http://nodejs.org/)
+3. Go to the project folder in a terminal and run:
+    `npm install`
+4. Start the application
+5.  `node app.js`
 
 ## Structure of this application
 

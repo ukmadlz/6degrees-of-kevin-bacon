@@ -7,7 +7,10 @@
     "start": "node index.js",
     "test": "test",
     "start-dev": "nodemon index.js",
-    "postinstall": "node setup.js"
+    "postinstall": "npm run setup && npm run credentials && npm run import",
+    "setup": "node setup.js",
+    "credentials": "node config.js",
+    "import": "./import.js -c config.json -p data/movies-demo.csv"
   },
   "repository": {
     "type": "git",

@@ -16,15 +16,19 @@
  * limitations under the License.
  */
 
+// Load env
+require('dotenv').load();
+
 // Necessary Libs
+var cfenv     = require('cfenv');
 var Hapi      = require('hapi');
 var Path      = require('path');
 var GDS       = require('ibm-graph-client');
 var traversal = require('./assets/traversal');
 
-// Load env
-require('dotenv').load();
-
+// Handle Configs
+var appEnv = cfenv.getAppEnv();
+console.log(appEnv.getServiceCreds('Bacon'));
 // Set config
 if (process.env.VCAP_SERVICES) {
   var vcapServices = JSON.parse(process.env.VCAP_SERVICES);
@@ -56,15 +60,15 @@ var server = new Hapi.Server({
 
 // Set Hapi Connections
 server.connection({
-  host: process.env.VCAP_APP_HOST || process.env.HOST || 'localhost',
-  port: process.env.VCAP_APP_PORT || process.env.PORT || 3000,
+  host: appEnv.bind || process.env.HOST || 'localhost',
+  port: appEnv.port || process.env.PORT || 3000,
 });
 
 // Hapi Log
 server.log(['error', 'database', 'read']);
 
 server.views({
-  engines: { jade: require('jade') },
+  engines: { jade: require('pug') },
   path: __dirname + '/templates',
 });
 

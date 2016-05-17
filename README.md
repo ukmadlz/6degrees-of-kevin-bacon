@@ -82,4 +82,4 @@ The fastest way to deploy this application to Bluemix is to click the **Deploy t
 
 ## Contribute
 
-We are more than happy to accept external contributions to this project, be it in the form of issues and pull requests. If you find a bug, please report it via the Issues section or even better, fork the project and submit a pull request with your fix!
+See [CONTRIBUTING.md](./CONTRIBUTING.md)

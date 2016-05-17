@@ -8,68 +8,68 @@ head
     meta(name='author', content='Mike Elsmore <mike.elsmore@uk.ibm.com>')
     title 6 Degrees of Kevin Bacon
     // Bootstrap core CSS
-    link(href="https://raw.githubusercontent.com/bassjobsen/typeahead.js-bootstrap-css/master/typeaheadjs.css", rel="stylesheet")
-    link(href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.5.0/vis.min.css", rel="stylesheet")
-    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css")
-    link(rel="stylesheet", href="http://seamsui-va.mybluemix.net/master.css")
+    link(href="//raw.githubusercontent.com/bassjobsen/typeahead.js-bootstrap-css/master/typeaheadjs.css", rel="stylesheet")
+    link(href="//cdnjs.cloudflare.com/ajax/libs/vis/4.5.0/vis.min.css", rel="stylesheet")
+    link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css")
+    link(rel="stylesheet", href="/assets/master.css")
     link(rel="stylesheet", href="/assets/style.css")
     // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
     //if lt IE 9
-      script(src='https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')
-      script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
-  body
-    header.capped-layout_cap.app-banner
-      a.app-banner_title(rel="home", href="https://developer.ibm.com/clouddataservices") IBM Cloud Data Services // Dev
-    .hero
-      div.topline
-        img(src="/assets/bacon6.png")
-        p.navbar-text Six Degrees of Kevin Bacon
-      .jumbotron
-        h1 Find the Bacon Number
-        p.lead The Bacon number of an actor or actress is the number of degrees of separation they have from the actor Kevin Bacon. This is an application of the 
-          a(href="https://en.wikipedia.org/wiki/Erd%C5%91s_number") Erdős number 
-          | to the Hollywood movie industry. The higher the Bacon number, the farther away from Kevin Bacon the actor is.
-        p This demo is built on top of the 
-          a(href="https://console.eu-gb.bluemix.net/catalog/services/ibm-graph/") IBM Graph
-          | . For more information, and to find out how to use the API, see the 
-          a(href="https://www.eu-gb.bluemix.net/docs/services/graphdb/index.html") Documentation
-          | .
-        form.form-inline
-          .form-group
-            label(for='actors')  
-              input#actor.form-control.typeahead(type="text", placeholder="Actor")
-            button.btn.btn-primary(type='submit') Find
-          .checkbox
-            label
-              input#showall(type="checkbox")
-              | Show All Paths
+      script(src='//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')
+      script(src='//oss.maxcdn.com/respond/1.4.2/respond.min.js')
+body
+  header.capped-layout_cap.app-banner
+    a.app-banner_title(rel="home", href="https://developer.ibm.com/clouddataservices") IBM Cloud Data Services // Dev
+  .hero
+    div.topline
+      img(src="/assets/bacon6.png")
+      p.navbar-text Six Degrees of Kevin Bacon
+    .jumbotron
+      h1 Find the Bacon Number
+      p.lead The Bacon number of an actor or actress is the number of degrees of separation they have from the actor Kevin Bacon. This is an application of the 
+        a(href="https://en.wikipedia.org/wiki/Erd%C5%91s_number") Erdős number 
+        | to the Hollywood movie industry. The higher the Bacon number, the farther away from Kevin Bacon the actor is.
+      p This demo is built on top of the 
+        a(href="https://console.eu-gb.bluemix.net/catalog/services/ibm-graph/") IBM Graph
+        | . For more information, and to find out how to use the API, see the 
+        a(href="https://www.eu-gb.bluemix.net/docs/services/graphdb/index.html") Documentation
+        | .
+      form.form-inline
+        .form-group
+          label(for='actors')  
+            input#actor.form-control.typeahead(type="text", placeholder="Actor")
+          button.btn.btn-primary(type='submit') Find
+        .checkbox
+          label
+            input#showall(type="checkbox")
+            | Show All Paths
 
-    .row.marketing.hidden
-      .number
-        .box
-          h4.heading Bacon Number
-          #bacon-number(style="text-align: center; font-size: 10em;")
-      .query
-        .box
-          h4.heading Query
-          pre
-            code#query
-
-    .row.marketing.hidden
+  .row.marketing.hidden
+    .number
       .box
-        h4.heading The Graph
-        #the-graph
-    .row.marketing.hidden
+        h4.heading Bacon Number
+        #bacon-number(style="text-align: center; font-size: 10em;")
+    .query
       .box
-        h4.heading Data        
+        h4.heading Query
         pre
-          code#graph-data
-    footer.footer
-      Copyright &copy; 2016 Copyright IBM All Rights Reserved.
-    // /container
-    script(type="text/javascript", src="http://code.jquery.com/jquery-2.1.4.min.js")
-    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.5.0/vis.min.js")
-    script(type="text/javascript", src="assets/traversal.js")
-    script(type="text/javascript", src="assets/app.js")
+          code#query
+
+  .row.marketing.hidden
+    .box
+      h4.heading The Graph
+      #the-graph
+  .row.marketing.hidden
+    .box
+      h4.heading Data        
+      pre
+        code#graph-data
+  footer.footer
+    Copyright &copy; 2016 Copyright IBM All Rights Reserved.
+  // /container
+  script(type="text/javascript", src="//code.jquery.com/jquery-2.1.4.min.js")
+  script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js")
+  script(src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js")
+  script(src="//cdnjs.cloudflare.com/ajax/libs/vis/4.5.0/vis.min.js")
+  script(type="text/javascript", src="assets/traversal.js")
+  script(type="text/javascript", src="assets/app.js")

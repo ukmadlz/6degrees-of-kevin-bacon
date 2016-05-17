@@ -26,7 +26,7 @@ var uuid           = require('uuid');
 // Read the ARGS
 var parser = new ArgumentParser({
   version: '0.0.1',
-  addHelp:true,
+  addHelp: true,
   description: 'Import actors and films into GraphDB',
 });
 parser.addArgument(

@@ -10,7 +10,7 @@
     "postinstall": "npm run setup && npm run credentials && npm run import",
     "setup": "node setup.js",
     "credentials": "node config.js",
-    "import": "./import.js -c config.json -p data/movies-demo.csv"
+    "import": "./import.js -c ./config.json -p ./data/movies-demo.csv"
   },
   "repository": {
     "type": "git",
@@ -34,5 +34,8 @@
     "path": "^0.12.7",
     "pug": "^2.0.0-alpha6",
     "uuid": "^2.0.1"
+  },
+  "engines": {
+    "node": ">=5"
   }
 }

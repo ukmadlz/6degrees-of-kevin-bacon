@@ -18,11 +18,10 @@
  */
 
 // Load env
-require('dotenv').load();
+require('dotenv').load({ silent: true });
 
 // Necessary Libs
 var cfenv = require('cfenv');
-var Path  = require('path');
 var fs    = require('fs');
 
 // Handle Configs

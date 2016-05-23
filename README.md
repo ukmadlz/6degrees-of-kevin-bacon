@@ -103,6 +103,11 @@ Put your service credentials into a new file named `config.json`. Then, run the 
 4. Start the application
 5.  `node index.js`
 
+## Documentation
+
+ * [IBM Graph documentation](https://ibm-graph-docs.ng.bluemix.net/)
+ * [IBM Graph interactive guide for Node.js](https://ibm-graph-docs.ng.bluemix.net/interactive-guide-node-js.html)
+
 ## Structure of this application
 
 ```

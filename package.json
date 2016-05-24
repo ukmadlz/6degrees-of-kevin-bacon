@@ -24,7 +24,7 @@
   "homepage": "https://github.com/ibm-cds-labs/6degrees-of-kevin-bacon",
   "dependencies": {
     "argparse": "^1.0.2",
-    "cf-deployment-tracker-client": "0.0.8",
+    "cf-deployment-tracker-client": "^0.x",
     "cfenv": "^1.0.3",
     "dotenv": "^2.0.0",
     "fast-csv": "^0.6.0",

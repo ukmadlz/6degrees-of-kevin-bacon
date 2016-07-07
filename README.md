@@ -34,7 +34,7 @@ cf login
 7. Create an instance of the IBM Graph service.
 
    ```
-cf create-service 'IBM Graph' Entry six-degrees
+cf create-service "IBM Graph" Entry six-degrees
    ```
 
 8. Push the app.

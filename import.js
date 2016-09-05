@@ -21,7 +21,8 @@ var fs             = require('fs');
 var GDS            = require('ibm-graph-client');
 var ArgumentParser = require('argparse').ArgumentParser;
 var csv            = require('fast-csv');
-var uuid           = require('uuid');
+var md5            = require('md5');
+var async          = require('async');
 
 // Read the ARGS
 var parser = new ArgumentParser({
@@ -70,75 +71,51 @@ fs.readFile(args.credentials, 'utf8', function (err, config) {
     var stream = fs.createReadStream(args.path);
 
     var importData    = [];
-    var actorList     = [];
-    var actorVertices = [];
-    var filmList      = [];
-    var filmVertices  = [];
-    var graphsonArray = [];
     var csvStream = csv()
       .on('data', function (data) {
         importData.push(data);
-        if (actorList.indexOf(data[0]) < 0) {
-          actorList.push(data[0]);
-        }
-
-        if (filmList.indexOf(data[2]) < 0) {
-          filmList.push(data[2]);
-        }
       })
       .on('end', function () {
 
-        // Build Actor Vertices
-        for (var i = 0; i < actorList.length; i++) {
-          var gremlinQuery = 'def a' + (i + 1) + ' = graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actorList[i] + '\");';
-          gremlinQuery += 'if(a' + (i + 1) + '.hasNext()){a' + (i + 1) + '.next()}\n';
-          gremlinQuery += 'else{ graph.addVertex(T.label, \"person\", \"name\", \"' + actorList[i] + '\", \"type\", \"Actor\"); }\n';
+        // Add Nodes
+        async.eachSeries(importData, function (data, cb) {
+          const relationship = data[1];
+          const actor = data[0];
+          const actorMd5 = md5(data[0]);
+          const film = data[2];
+          const filmMd5 = md5(data[2]);
+
+          var gremlinQuery = 'def a'+actorMd5+' = graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actor + '\");';
+          gremlinQuery += 'if(a'+actorMd5+'.hasNext()){a'+actorMd5+'.next()}\n';
+          gremlinQuery += 'else{ graph.addVertex(T.label, \"person\", \"name\", \"' + actor + '\", \"type\", \"Actor\"); }\n';
+          gremlinQuery += 'def f'+filmMd5+' = graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + film + '\");';
+          gremlinQuery += 'if(f'+filmMd5+'.hasNext()){f'+filmMd5+'.next()}\n';
+          gremlinQuery += 'else{ graph.addVertex(T.label, \"film\", \"name\", \"' + film + '\", \"type\", \"Film\"); }\n';
+          gremlinQuery += 'if(graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actor + '\").out().hasLabel(\"film\").has(\"name\",\"' + film + '\").hasNext()){';
+          gremlinQuery += 'graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actor + '\").out().hasLabel(\"film\").has(\"name\",\"' + film + '\")';
+          gremlinQuery += '}else{\n';
+          gremlinQuery += 'def a = graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actor + '\");\n';
+          gremlinQuery += 'def f = graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + film + '\");\n';
+          gremlinQuery += 'a.next().addEdge(\"' + relationship + '\", f.next());\n';
+          gremlinQuery += '}\n';
+          gremlinQuery += 'if(graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + film + '\").out().hasLabel(\"person\").has(\"name\",\"' + actor + '\").hasNext()){\n';
+          gremlinQuery += 'graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + film + '\").out().hasLabel(\"person\").has(\"name\",\"' + actor + '\")';
+          gremlinQuery += '}else{\n';
+          gremlinQuery += 'def a = graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actor + '\");\n';
+          gremlinQuery += 'def f = graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + film + '\");\n';
+          gremlinQuery += 'f.next().addEdge(\"' + relationship + '\", a.next());\n';
+          gremlinQuery += '}\n';
           importDb.gremlin(gremlinQuery, function (e, b) {
             if (e) {
-              console.log(e, b)
+              console.log(e, b);
             } else {
-              console.log('Actor ' + b.result.data[0].properties.name[0].value + ' added');
+              console.log(actor, '->', film);
             }
+            cb();
           });
-        }
-
-
-        // Build Film Vertices
-        for (var i = 0; i < filmList.length; i++) {
-          var gremlinQuery = 'def f' + (i + 1) + ' = graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + filmList[i] + '\");';
-          gremlinQuery += 'if(f' + (i + 1) + '.hasNext()){f' + (i + 1) + '.next()}\n';
-          gremlinQuery += 'else{ graph.addVertex(T.label, \"film\", \"name\", \"' + filmList[i] + '\", \"type\", \"Film\"); }\n';
-          importDb.gremlin(gremlinQuery, function (e, b) {
-            if (e) {
-              console.log(e, b)
-            } else {
-              console.log('Film ' + b.result.data[0].properties.name[0].value + ' added');
-            }
-          });
-        }
-
-        // Match and add Edges
-        for (var i = 0; i < importData.length; i++) {
-          var relationship = importData[i][1];
-          var gremlinQuery = 'if(graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + importData[i][0] + '\").out().hasLabel(\"film\").has(\"name\",\"' + importData[i][2] + '\").hasNext()){';
-          gremlinQuery += 'graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + importData[i][0] + '\").out().hasLabel(\"film\").has(\"name\",\"' + importData[i][2] + '\")';
-          gremlinQuery += '}else{\n';
-          gremlinQuery += 'def a' + (i + 1) + ' = graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + importData[i][0] + '\");\n';
-          gremlinQuery += 'def f' + (i + 1) + ' = graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + importData[i][2] + '\");\n';
-          gremlinQuery += 'a' + (i + 1) + '.next().addEdge(\"' + relationship + '\", f' + (i + 1) + '.next());\n';
-          gremlinQuery += '}\n';
-          gremlinQuery += 'if(graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + importData[i][2] + '\").out().hasLabel(\"person\").has(\"name\",\"' + importData[i][0] + '\").hasNext()){\n';
-          gremlinQuery += 'graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + importData[i][2] + '\").out().hasLabel(\"person\").has(\"name\",\"' + importData[i][0] + '\")';
-          gremlinQuery += '}else{\n';
-          gremlinQuery += 'def a' + (i + 1) + ' = graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + importData[i][0] + '\");\n';
-          gremlinQuery += 'def f' + (i + 1) + ' = graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + importData[i][2] + '\");\n';
-          gremlinQuery += 'f' + (i + 1) + '.next().addEdge(\"' + relationship + '\", a' + (i + 1) + '.next());\n';
-          gremlinQuery += '}\n';
-          console.log(gremlinQuery);
-          importDb.gremlin(gremlinQuery, function (e, b) {
-            if (e) {console.log(e, b);}
-          });
-        };
+        }, function(err) {
+          if (err) console.error('ERROR:', err);
+        });
 
       });
 

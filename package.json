@@ -24,6 +24,7 @@
   "homepage": "https://github.com/ibm-cds-labs/6degrees-of-kevin-bacon",
   "dependencies": {
     "argparse": "^1.0.2",
+    "async": "^2.0.1",
     "cf-deployment-tracker-client": "^0.x",
     "cfenv": "^1.0.3",
     "dotenv": "^2.0.0",
@@ -31,9 +32,9 @@
     "hapi": "^8.8.0",
     "ibm-graph-client": "^0.3.4",
     "inert": "^3.2.0",
+    "md5": "^2.2.1",
     "path": "^0.12.7",
-    "pug": "^2.0.0-alpha6",
-    "uuid": "^2.0.1"
+    "pug": "^2.0.0-alpha6"
   },
   "engines": {
     "node": ">=5"

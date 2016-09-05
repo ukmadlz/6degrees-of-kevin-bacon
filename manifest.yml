@@ -2,7 +2,7 @@
 declared-services:
   six-degrees:
     label: IBM Graph
-    plan: Entry
+    plan: Standard
 
 applications:
 - name: six-degrees-of-kevin-bacon

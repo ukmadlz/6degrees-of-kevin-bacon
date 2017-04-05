@@ -10,50 +10,50 @@ This sample app shows you how to write a Node.js application that interfaces wit
 
 3. Clone the app to your local environment from your terminal using the following command:
 
-```
+   ```
 git clone https://github.com/ibm-cds-labs/6degrees-of-kevin-bacon.git
-```
+   ```
 
 4. Change into the newly created directory:
 
-```
+   ```
 cd 6degrees-of-kevin-bacon
-```
+   ```
 
 5. Open the `manifest.yml` file and change the `host` value to something unique.
 
-The host you choose will determine the subdomain of your application's URL.
+   The host you choose will determine the subdomain of your application's URL.
 
 6. Connect to Bluemix in the command line tool and log in.
 
-```
+   ```
 cf api <API_URL> # e.g. https://api.ng.bluemix.net
 cf login
-```
+   ```
 
 7. Create an instance of the IBM Graph service.
 
-```
-cf create-service 'IBM Graph' Entry six-degrees
-```
+   ```
+cf create-service "IBM Graph" Standard six-degrees
+   ```
 
 8. Push the app.
 
-```
+   ```
 # optionally, log in
 cf api <API_URL> # e.g. https://api.ng.bluemix.net
 cf login
 # deploy the app
 cf push
-```
+   ```
 
 9. Import the sample data
 
-Put your service credentials into a new file named `config.json`. Then, run the import script:
+   Put your service credentials into a new file named `config.json`. Then, run the import script:
 
-```
+   ```
 ./import.js -c config.json -p data/movies-demo.csv
-```
+   ```
 
 ## Running locally
   The application uses [Node.js](http://nodejs.org/) and [npm](https://www.npmjs.com/) so you will have to download and install them as part of the steps below.

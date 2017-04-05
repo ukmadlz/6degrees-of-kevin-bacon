@@ -21,7 +21,8 @@ var fs             = require('fs');
 var GDS            = require('ibm-graph-client');
 var ArgumentParser = require('argparse').ArgumentParser;
 var csv            = require('fast-csv');
-var uuid           = require('uuid');
+var md5            = require('md5');
+var async          = require('async');
 
 // Read the ARGS
 var parser = new ArgumentParser({
@@ -61,151 +62,64 @@ fs.readFile(args.credentials, 'utf8', function (err, config) {
   // Setup wrapper library
   var importDb = new GDS(gdsConfig);
 
-  var stream = fs.createReadStream(args.path);
+  // Update the session
+  importDb.session(function (e, b) {
+    if (!e) {
+      importDb.config.session = b;
+    }
 
-  var importData    = [];
-  var actorList     = [];
-  var actorVertices = [];
-  var filmList      = [];
-  var filmVertices  = [];
-  var graphsonArray = [];
-  var csvStream = csv()
+    var stream = fs.createReadStream(args.path);
+
+    var importData    = [];
+    var csvStream = csv()
       .on('data', function (data) {
         importData.push(data);
-        if (actorList.indexOf(data[0]) < 0) {
-          actorList.push(data[0]);
-        }
-
-        if (filmList.indexOf(data[2]) < 0) {
-          filmList.push(data[2]);
-        }
       })
       .on('end', function () {
-        // Build Actor Vertices
-        for (var i = 0; i < actorList.length; i++) {
-          var vertex = {
-            id: 'a' + (i + 1),
-            label: 'person',
-            properties: {
-              name: [{
-                id: uuid.v4(),
-                value: actorList[i],
-              },
-              ],
-              type: [{
-                id: uuid.v4(),
-                value: 'Actor',
-              },
-            ],
-            },
-            inE: {},
-            outE: {},
-          };
-          actorVertices[i] = vertex;
-        }
 
-        // Build Film Vertices
-        for (var i = 0; i < filmList.length; i++) {
-          var vertex = {
-            id: 'f' + (i + 1),
-            label: 'film',
-            properties: {
-              name: [{
-                id: uuid.v4(),
-                value: filmList[i],
-              },
-              ],
-              type: [{
-                id: uuid.v4(),
-                value: 'Film',
-              },
-              ],
-            },
-            inE: {},
-            outE: {},
-          };
-          filmVertices[i] = vertex;
-        }
+        // Add Nodes
+        async.eachSeries(importData, function (data, cb) {
+          const relationship = data[1];
+          const actor = data[0];
+          const actorMd5 = md5(data[0]);
+          const film = data[2];
+          const filmMd5 = md5(data[2]);
 
-        // Match and add Edges
-        for (var i = 0; i < importData.length; i++) {
-          var actorId = actorList.indexOf(importData[i][0]);
-          var filmId = filmList.indexOf(importData[i][2]);
-          var relationship = importData[i][1];
-
-          // Actor -> Film
-          var edgeId = uuid.v4();
-          var outE = {
-            id: edgeId,
-            inV: 'f' + (filmId + 1),
-          };
-
-          if (typeof actorVertices[actorId].outE[relationship] == 'undefined') {
-            actorVertices[actorId].outE[relationship] = [];
-          }
-
-          actorVertices[actorId].outE[relationship].push(outE);
-          var inE = {
-            id: edgeId,
-            inV: 'a' + (actorId + 1),
-          };
-
-          if (typeof filmVertices[filmId].inE[relationship] == 'undefined') {
-            filmVertices[filmId].inE[relationship] = [];
-          };
-
-          filmVertices[filmId].inE[relationship].push(inE);
-
-          // Film -> Actor
-          var edgeId = uuid.v4();
-          var outE = {
-            id: edgeId,
-            inV: 'a' + (actorId + 1),
-          };
-
-          if (typeof filmVertices[filmId].outE[relationship] == 'undefined') {
-            filmVertices[filmId].outE[relationship] = [];
-          };
-
-          filmVertices[filmId].outE[relationship].push(outE);
-          var inE = {
-            id: edgeId,
-            inV: 'f' + (filmId + 1),
-          };
-
-          if (typeof actorVertices[actorId].inE[relationship] == 'undefined') {
-            actorVertices[actorId].inE[relationship] = [];
-          };
-
-          actorVertices[actorId].inE[relationship].push(inE);
-
-        };
-
-        for (var i = 0; i < actorVertices.length; i++) {
-          graphsonArray.push(JSON.stringify(actorVertices[i]));
-        };
-
-        for (var i = 0; i < filmVertices.length; i++) {
-          graphsonArray.push(JSON.stringify(filmVertices[i]));
-        };
-
-        // console.log(graphsonArray);
-        var graphsonString = graphsonArray.join('\n');
-        console.log(graphsonString);
-        importDb.io().graphson(graphsonString, function (e, b) {
-          console.log(e);
-          console.log(b);
+          var gremlinQuery = 'def a'+actorMd5+' = graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actor + '\");';
+          gremlinQuery += 'if(a'+actorMd5+'.hasNext()){a'+actorMd5+'.next()}\n';
+          gremlinQuery += 'else{ graph.addVertex(T.label, \"person\", \"name\", \"' + actor + '\", \"type\", \"Actor\"); }\n';
+          gremlinQuery += 'def f'+filmMd5+' = graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + film + '\");';
+          gremlinQuery += 'if(f'+filmMd5+'.hasNext()){f'+filmMd5+'.next()}\n';
+          gremlinQuery += 'else{ graph.addVertex(T.label, \"film\", \"name\", \"' + film + '\", \"type\", \"Film\"); }\n';
+          gremlinQuery += 'if(graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actor + '\").out().hasLabel(\"film\").has(\"name\",\"' + film + '\").hasNext()){';
+          gremlinQuery += 'graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actor + '\").out().hasLabel(\"film\").has(\"name\",\"' + film + '\")';
+          gremlinQuery += '}else{\n';
+          gremlinQuery += 'def a = graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actor + '\");\n';
+          gremlinQuery += 'def f = graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + film + '\");\n';
+          gremlinQuery += 'a.next().addEdge(\"' + relationship + '\", f.next());\n';
+          gremlinQuery += '}\n';
+          gremlinQuery += 'if(graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + film + '\").out().hasLabel(\"person\").has(\"name\",\"' + actor + '\").hasNext()){\n';
+          gremlinQuery += 'graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + film + '\").out().hasLabel(\"person\").has(\"name\",\"' + actor + '\")';
+          gremlinQuery += '}else{\n';
+          gremlinQuery += 'def a = graph.traversal().V().hasLabel(\"person\").has(\"name\",\"' + actor + '\");\n';
+          gremlinQuery += 'def f = graph.traversal().V().hasLabel(\"film\").has(\"name\",\"' + film + '\");\n';
+          gremlinQuery += 'f.next().addEdge(\"' + relationship + '\", a.next());\n';
+          gremlinQuery += '}\n';
+          importDb.gremlin(gremlinQuery, function (e, b) {
+            if (e) {
+              console.log(e, b);
+            } else {
+              console.log(actor, '->', film);
+            }
+            cb();
+          });
+        }, function(err) {
+          if (err) console.error('ERROR:', err);
         });
 
-        fs.writeFile('graphson', graphsonString, function (err) {
-          if (err) {
-            return console.log(err);
-          }
-
-          console.log('The file was saved!');
-        });
       });
 
-  stream.pipe(csvStream);
+    stream.pipe(csvStream);
+  });
 
 });

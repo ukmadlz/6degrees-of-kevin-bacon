@@ -28,7 +28,7 @@ var traversal = require('./assets/traversal');
 
 // Handle Configs
 var appEnv = cfenv.getAppEnv();
-console.log(appEnv.name, appEnv.getServiceCreds('Bacon'));
+
 // Set config
 if (process.env.VCAP_SERVICES) {
   var vcapServices = JSON.parse(process.env.VCAP_SERVICES);

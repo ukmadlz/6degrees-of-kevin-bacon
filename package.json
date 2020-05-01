@@ -10,7 +10,9 @@
     "postinstall": "npm run setup && npm run credentials && npm run import",
     "setup": "node setup.js",
     "credentials": "node config.js",
-    "import": "./import.js -c ./config.json -p ./data/movies-demo.csv"
+    "import": "./import.js -c ./config.json -p ./data/movies-demo.csv",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -34,9 +36,11 @@
     "inert": "^3.2.0",
     "md5": "^2.2.1",
     "path": "^0.12.7",
-    "pug": "^2.0.0-alpha6"
+    "pug": "^2.0.0-alpha6",
+    "snyk": "^1.316.1"
   },
   "engines": {
     "node": ">=5"
-  }
+  },
+  "snyk": true
 }
